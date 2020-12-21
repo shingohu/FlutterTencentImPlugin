@@ -4,7 +4,12 @@
 .packages
 .pub/
 .idea
+<<<<<<< HEAD
 .github
 *.iml
 build/
 pubspec.lock
+=======
+*.iml
+build/
+>>>>>>> 7604da002605c13342cec58121831da9dcea131d
