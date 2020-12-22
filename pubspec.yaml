@@ -15,9 +15,9 @@ dependencies:
   uuid: 2.2.2
   # 日志输出(https://pub.dev/packages/logger)
   logger: 0.9.4
-  #侧滑删除(https://github.com/letsar/flutter_slidable)
-  flutter_slidable: ^0.5.7
+
   intl: ^0.16.1
+
 
 dev_dependencies:
   flutter_test:

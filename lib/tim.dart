@@ -5,4 +5,6 @@ export 'package:tencent_im_plugin/entity/conversation_entity.dart';
 export 'package:tencent_im_plugin/utils/time_util.dart';
 export 'package:tencent_im_plugin/entity/user_entity.dart';
 
-export 'package:flutter_slidable/flutter_slidable.dart';
+
+export 'package:tencent_im_plugin/entity/find_message_entity.dart';
+export 'package:tencent_im_plugin/entity/message_entity.dart';
