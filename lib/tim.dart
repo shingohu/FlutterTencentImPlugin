@@ -11,3 +11,4 @@ export 'package:tencent_im_plugin/entity/message_entity.dart';
 
 export 'package:tencent_im_plugin/message_node/text_message_node.dart';
 export 'package:tencent_im_plugin/message_node/image_message_node.dart';
+export 'package:tencent_im_plugin/enums/image_type_enum.dart';
