@@ -103,7 +103,7 @@ class MessageEntity {
     Map<String, dynamic> json =
         data is Map ? data.cast<String, dynamic>() : jsonDecode(data);
     msgID = json["msgID"];
-    timestamp = json["timestamp"];
+    timestamp = json["timestamp"]??0;
     sender = json["sender"];
     nickName = json["nickName"];
     friendRemark = json["friendRemark"];

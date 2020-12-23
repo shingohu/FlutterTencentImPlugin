@@ -1,4 +1,4 @@
 1.退出登录时判断下状态
 2.util下新增了time_util
 3.新增了tim 统一对外导出需要用到的包
-4.新增extended_list
+4.MessageEntity中timestamp为空时设置为0
