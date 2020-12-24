@@ -2,3 +2,4 @@
 2.util下新增了time_util
 3.新增了tim 统一对外导出需要用到的包
 4.MessageEntity中timestamp为空时设置为0
+5.修改iOS onReceiveNewInvitation中group强制解包会闪退
