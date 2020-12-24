@@ -12,7 +12,7 @@ class CustomSignalingListener: NSObject, V2TIMSignalingListener {
         SwiftTencentImPlugin.invokeListener(type: ListenerType.ReceiveNewInvitation, params: [
             "inviteID": inviteID!,
             "inviter": inviter!,
-            "groupID": groupID ?? nil,
+            "groupID": groupID!,
             "inviteeList": inviteeList!,
             "data": data!,
         ])
