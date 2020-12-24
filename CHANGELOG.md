@@ -284,3 +284,8 @@
 * Demo增加生成签名
 * 修复部分回调在 IOS 端下包含 Optional 的问题
 * 升级SDK版本为 5.1.10
+
+## 1.2.4
+* 修复 setMessageLocalCustomStr 执行失败的问题
+* Demo增加发起会话
+* 修复 onReceiveNewInvitation 解包失败的问题
