@@ -3,3 +3,5 @@
 3.新增了tim 统一对外导出需要用到的包
 4.MessageEntity中timestamp为空时设置为0
 5.修改iOS onReceiveNewInvitation中group强制解包会闪退
+6.新增了VideoMessageNodeExt扩展 支持dart设置宽高
+7.ImageMessageNode 新增宽高属性 在本地发送时设置

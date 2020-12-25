@@ -77,3 +77,13 @@ class VideoMessageNode extends MessageNode {
     return data;
   }
 }
+
+extension VideoMessageNodeExt on VideoMessageNode {
+  set imgWidth(int snapshotWidth) {
+    _snapshotWidth = snapshotWidth;
+  }
+
+  set imgHeight(int snapshotHeight) {
+    _snapshotHeight = snapshotHeight;
+  }
+}
