@@ -13,3 +13,5 @@ export 'package:tencent_im_plugin/message_node/text_message_node.dart';
 export 'package:tencent_im_plugin/message_node/video_message_node.dart';
 export 'package:tencent_im_plugin/tencent_im_plugin.dart';
 export 'package:tencent_im_plugin/utils/time_util.dart';
+export 'package:tencent_im_plugin/entity/message_send_fail_entity.dart';
+
