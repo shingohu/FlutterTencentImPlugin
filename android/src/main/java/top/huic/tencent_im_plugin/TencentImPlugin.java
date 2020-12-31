@@ -1304,4 +1304,74 @@ public class TencentImPlugin implements FlutterPlugin, MethodCallHandler {
             }
         });
     }
+
+    /**
+     * 重新发送消息
+     *
+     * @param methodCall 方法调用对象
+     * @param result     返回结果对象
+     */
+    private void reSendMessage(MethodCall methodCall, final Result result) {
+        String _msgId = methodCall.argument("msgId");
+        final String receiver = methodCall.argument("receiver");
+        final String groupID = methodCall.argument("groupID");
+        final boolean ol = CommonUtil.getParam(methodCall, result, "ol");
+        final Integer priority = CommonUtil.getParam(methodCall, result, "priority");
+        final String offlinePushInfo = methodCall.argument("offlinePushInfo");
+
+        final Integer localCustomInt = methodCall.argument("localCustomInt");
+        final String localCustomStr = methodCall.argument("localCustomStr");
+
+        final FindMessageEntity findMessageEntity = new FindMessageEntity();
+        findMessageEntity.setMsgId(_msgId);
+        TencentImUtils.getMessageByFindMessageEntity(findMessageEntity, new ValueCallBack<V2TIMMessage>(result) {
+            @Override
+            public void onSuccess(V2TIMMessage v2TIMMessage) {
+
+                if (localCustomInt != null) {
+                    v2TIMMessage.setLocalCustomInt(localCustomInt);
+                }
+                if (localCustomStr != null) {
+                    v2TIMMessage.setLocalCustomData(localCustomStr);
+                }
+
+
+                final String[] msgId = new String[1];
+                V2TIMSendCallback<V2TIMMessage> callback = new V2TIMSendCallback<V2TIMMessage>() {
+                    @Override
+                    public void onError(final int i, final String s) {
+                        TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendFail, new HashMap<String, Object>() {
+                            {
+                                put("msgId", msgId[0]);
+                                put("code", i);
+                                put("desc", s);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(V2TIMMessage o) {
+                        TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendSucc, new CustomMessageEntity(o));
+                    }
+
+                    @Override
+                    public void onProgress(final int i) {
+                        TencentImPlugin.invokeListener(ListenerTypeEnum.MessageSendProgress, new HashMap<String, Object>() {
+                            {
+                                put("msgId", msgId[0]);
+                                put("progress", i);
+                            }
+                        });
+                    }
+                };
+                // 发送消息
+                msgId[0] = V2TIMManager.getMessageManager().sendMessage(v2TIMMessage, receiver, groupID, priority, ol, offlinePushInfo == null ? null : JSON.parseObject(offlinePushInfo, V2TIMOfflinePushInfo.class), callback);
+                result.success(msgId[0]);
+
+
+            }
+        });
+
+
+    }
 }
