@@ -51,6 +51,7 @@ class OfflinePushInfoEntity {
     if (this.desc != null) data['desc'] = this.desc;
     if (this.ext != null) data['ext'] = this.ext;
     if (this.iOSSound != null) data['iOSSound'] = this.iOSSound;
+    if (this.disablePush != null) data['disablePush'] = this.disablePush;
     if (this.ignoreIOSBadge != null)
       data['ignoreIOSBadge'] = this.ignoreIOSBadge;
     if (this.androidOPPOChannelID != null)
