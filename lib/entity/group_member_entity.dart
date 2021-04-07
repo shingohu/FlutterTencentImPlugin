@@ -60,7 +60,11 @@ class GroupMemberEntity {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is GroupMemberEntity && runtimeType == other.runtimeType && userID == other.userID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GroupMemberEntity &&
+          runtimeType == other.runtimeType &&
+          userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;

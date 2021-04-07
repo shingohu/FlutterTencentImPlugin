@@ -20,6 +20,12 @@ class UserEntity {
   /// 性别
   UserGenderEnum gender;
 
+  /// 角色
+  int role;
+
+  /// 等级
+  int level;
+
   /// 好友验证方式
   UserAllowTypeEnum allowType;
 
@@ -31,6 +37,8 @@ class UserEntity {
     this.faceUrl,
     this.selfSignature,
     this.gender,
+    this.role,
+    this.level,
     this.allowType,
     this.customInfo,
   });
@@ -43,6 +51,8 @@ class UserEntity {
     faceUrl = json['faceUrl'];
     selfSignature = json['selfSignature'];
     gender = UserGenderTool.getByInt(json['gender']);
+    role = json['role'];
+    level = json['level'];
     allowType = UserAllowTypeTool.getByInt(json['allowType']);
     customInfo = json['customInfo']?.cast<String, String>();
   }
@@ -53,6 +63,8 @@ class UserEntity {
     if (this.faceUrl != null) data['faceUrl'] = this.faceUrl;
     if (this.selfSignature != null) data['selfSignature'] = this.selfSignature;
     if (this.gender != null) data['gender'] = UserGenderTool.toInt(this.gender);
+    if (this.role != null) data['role'] = this.role;
+    if (this.level != null) data['level'] = this.level;
     if (this.allowType != null)
       data['allowType'] = UserAllowTypeTool.toInt(this.allowType);
     if (this.customInfo != null) data['customInfo'] = this.customInfo;
@@ -60,7 +72,11 @@ class UserEntity {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UserEntity && runtimeType == other.runtimeType && userID == other.userID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserEntity &&
+          runtimeType == other.runtimeType &&
+          userID == other.userID;
 
   @override
   int get hashCode => userID.hashCode;

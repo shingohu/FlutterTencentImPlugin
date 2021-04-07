@@ -57,6 +57,9 @@ class GroupInfoEntity {
   /// 当前用户在此群中的加入时间
   int joinTime;
 
+  /// 自定义字段
+  Map<String, String> customInfo;
+
   GroupInfoEntity({
     this.groupID,
     this.groupType,
@@ -66,6 +69,7 @@ class GroupInfoEntity {
     this.faceUrl,
     this.allMuted,
     this.groupAddOpt,
+    this.customInfo,
   });
 
   GroupInfoEntity.fromJson(data) {
@@ -88,6 +92,8 @@ class GroupInfoEntity {
     role = GroupMemberRoleTool.getByInt(json["role"]);
     recvOpt = GroupReceiveMessageOptTool.getByInt(json["recvOpt"]);
     joinTime = json['joinTime'];
+    if (json['customInfo'] != null)
+      customInfo = (json['customInfo'] as Map).cast<String, String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -102,11 +108,16 @@ class GroupInfoEntity {
     if (this.allMuted != null) data['allMuted'] = this.allMuted;
     if (this.groupAddOpt != null)
       data['groupAddOpt'] = GroupAddOptTool.toInt(this.groupAddOpt);
+    if (this.customInfo != null) data['customInfo'] = this.customInfo;
     return data;
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is GroupInfoEntity && runtimeType == other.runtimeType && groupID == other.groupID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GroupInfoEntity &&
+          runtimeType == other.runtimeType &&
+          groupID == other.groupID;
 
   @override
   int get hashCode => groupID.hashCode;

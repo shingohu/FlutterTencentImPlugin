@@ -43,6 +43,12 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         case "unInitSDK":
             self.unInitSDK(call: call, result: result)
             break
+        case "getVersion":
+            self.getVersion(call: call, result: result)
+            break
+        case "getServerTime":
+            self.getServerTime(call: call, result: result)
+            break
         case "login":
             self.login(call: call, result: result)
             break
@@ -90,6 +96,9 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             break;
         case "getGroupHistoryMessageList":
             self.getGroupHistoryMessageList(call: call, result: result);
+            break;
+        case "getHistoryMessageList":
+            self.getHistoryMessageList(call: call, result: result);
             break;
         case "markC2CMessageAsRead":
             self.markC2CMessageAsRead(call: call, result: result);
@@ -307,7 +316,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
             V2TIMManager.sharedInstance().initSDK((appid as NSString).intValue, config: sdkConfig, listener: customSdkListener)
 
             // 绑定消息监听
-            V2TIMManager.sharedInstance().add(customAdvancedMsgListener)
+            V2TIMManager.sharedInstance()?.addAdvancedMsgListener(listener: customAdvancedMsgListener)
 
             // 绑定会话监听
             V2TIMManager.sharedInstance().setConversationListener(customConversationListener)
@@ -332,7 +341,19 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 反初始化
     public func unInitSDK(call: FlutterMethodCall, result: @escaping FlutterResult) {
         V2TIMManager.sharedInstance().unInitSDK();
+        V2TIMManager.sharedInstance()?.removeAdvancedMsgListener(listener: customAdvancedMsgListener)
+        V2TIMManager.sharedInstance()?.removeSignalingListener(listener: customSignalingListener)
         result(nil);
+    }
+
+    /// 获得SDK版本
+    public func getVersion(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(V2TIMManager.sharedInstance()?.getVersion()!);
+    }
+
+    /// 获取服务器当前时间
+    public func getServerTime(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(V2TIMManager.sharedInstance()?.getServerTime());
     }
 
     /// 登录
@@ -591,6 +612,47 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// 获得历史记录
+    public func getHistoryMessageList(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let lastMsg = ((call.arguments as! [String: Any])["lastMsg"]) as? String;
+        let groupID = ((call.arguments as! [String: Any])["groupID"]) as? String;
+        let userID = ((call.arguments as! [String: Any])["userID"]) as? String;
+        if let type = CommonUtils.getParam(call: call, result: result, param: "type") as? Int,
+           let count = CommonUtils.getParam(call: call, result: result, param: "count") as? Int32 {
+            // 返回结果对象
+            let resultCallBack = {
+                (messages: [V2TIMMessage]?) in
+                var resultData: [MessageEntity] = [];
+                for item in messages! {
+                    resultData.append(MessageEntity.init(message: item));
+                }
+                result(JsonUtil.toJson(resultData));
+            };
+
+            // 根据消息对象是否为null进行不同的操作
+            let opt = V2TIMMessageListGetOption();
+            if let v = userID {
+                opt.userID = v;
+            }
+            if let v = groupID {
+                opt.groupID = v;
+            }
+            opt.count = count;
+            opt.getType = V2TIMMessageGetType.init(rawValue: type)!;
+            if lastMsg == nil {
+                V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+            } else {
+                TencentImUtils.getMessageByFindMessageEntity(json: lastMsg!, succ: {
+                    (messages: V2TIMMessage?) in
+                    if let v = messages {
+                        opt.lastMsg = messages!;
+                    }
+                    V2TIMManager.sharedInstance()?.getHistoryMessageList(opt, succ: resultCallBack, fail: TencentImUtils.returnErrorClosures(result: result))
+                }, fail: TencentImUtils.returnErrorClosures(result: result));
+            }
+        }
+    }
+
     /// 设置单聊已读
     public func markC2CMessageAsRead(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let userID = CommonUtils.getParam(call: call, result: result, param: "userID") as? String {
@@ -764,10 +826,10 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
     /// 查找消息列表
     public func findMessages(call: FlutterMethodCall, result: @escaping FlutterResult) {
         if let messages = CommonUtils.getParam(call: call, result: result, param: "messages") as? String {
-            TencentImUtils.getMessageByFindMessageEntity(dict:JsonUtil.getArrayFromJSONString(jsonString: messages) as! [[String : Any]], succ: {
+            TencentImUtils.getMessageByFindMessageEntity(dict: JsonUtil.getArrayFromJSONString(jsonString: messages) as! [[String: Any]], succ: {
                 (ms: [V2TIMMessage]!) in
-                var res : [MessageEntity] = [];
-                for item in ms!{
+                var res: [MessageEntity] = [];
+                for item in ms! {
                     res.append(MessageEntity.init(message: item));
                 }
                 result(JsonUtil.toJson(res));
@@ -775,7 +837,7 @@ public class SwiftTencentImPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    
+
     /// 创建群
     public func createGroup(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let memberList = ((call.arguments as! [String: Any])["memberList"]) as? String;

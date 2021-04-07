@@ -74,6 +74,9 @@ class MessageEntity {
   /// 消息节点信息
   MessageNode node;
 
+  /// 消息随机码
+  int random;
+
   MessageEntity({
     this.msgID,
     this.timestamp,
@@ -97,6 +100,7 @@ class MessageEntity {
     this.seq,
     this.note,
     this.node,
+    this.random,
   });
 
   MessageEntity.fromJson(data) {
@@ -131,6 +135,7 @@ class MessageEntity {
         ? null
         : MessageElemTypeTool.getMessageNodeByMessageNodeType(
             elemType, json["node"]);
+    random = json["random"];
   }
 
   Map<String, dynamic> toJson() {
@@ -163,11 +168,16 @@ class MessageEntity {
       data['groupAtUserList'] = this.groupAtUserList;
     if (this.seq != null) data['seq'] = this.seq;
     if (this.note != null) data['note'] = this.note;
+    if (this.random != null) data['random'] = this.random;
     return data;
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MessageEntity && runtimeType == other.runtimeType && msgID == other.msgID;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MessageEntity &&
+          runtimeType == other.runtimeType &&
+          msgID == other.msgID;
 
   @override
   int get hashCode => msgID.hashCode;
