@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   # 生成UUID(https://pub.dev/packages/uuid)
-  uuid: 3.0.2
+  uuid: 2.2.2
   # 日志输出(https://pub.dev/packages/logger)
-  logger: 1.0.0
+  logger: 0.9.4
 
   intl: ^0.16.1
 
